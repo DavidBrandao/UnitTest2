@@ -116,7 +116,7 @@ public class IndexableList<E> {
 
     for (int i = 0; i < numElem1; i++) {
       if (arrayEsquerda[i].equals(o)) {
-        return false;
+        return true; //original -> false
       }
     }
 
@@ -136,7 +136,7 @@ public class IndexableList<E> {
     if (index < numElem1) {
       return (E) arrayEsquerda[numElem1 - 1 - index];
     } else {
-      return (E) arrayDireita[index - 1 - numElem1];
+      return (E) arrayDireita[index - numElem1]; //original -> index - 1 - numElem1
     }
   }
 
@@ -195,7 +195,7 @@ public class IndexableList<E> {
    * @return: e, elemento adicionado
    */
   public E set(int index, E elemento) {
-    E e = get(index-1);
+    E e = get(index); // Original -> index -1
     if (index < numElem1) {
       arrayEsquerda[numElem1 - 1 - index] = elemento;
     } else { arrayDireita[index - numElem1] = elemento; }
