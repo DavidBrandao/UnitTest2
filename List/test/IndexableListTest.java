@@ -197,7 +197,7 @@ class IndexableListTest {
     void testListaVazia() {
         IndexableList lista = new IndexableList<>(listaVaziaEsquerda, listaVaziaDireita);
 
-        assertTrue(lista.v());
+        assertTrue(lista.verificarListaVazia());
     }
 
     //Verifica se uma lista com elementos retorna False
@@ -205,7 +205,7 @@ class IndexableListTest {
     void testListaPopulada() {
         IndexableList lista = new IndexableList<>(listaCarrosNovos, listaCarrosVelhos);
 
-        assertFalse(lista.v());
+        assertFalse(lista.verificarListaVazia());
     }
 
     //Função remover com bug na linha 179

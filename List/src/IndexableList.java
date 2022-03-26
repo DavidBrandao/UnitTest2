@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-
 /* Essa classe trabalha com as estruturas de List em Java.
  * Ela implementa uma lista indexável, que é uma lista em que
  * os elementos podem ser acessados pelas suas posições na lista.
@@ -17,35 +16,40 @@ import java.util.ArrayList;
  */
 
 public class IndexableList<E> {
-  protected int numElem1;     // número de elementos no arrayEsquerda
-  protected int numElemDireita;    // número de elementos no arrayDireita
-  protected Object[] arrayEsquerda = new Object[0];
-  protected Object[] arrayDireita = new Object[0];
-  public static final int MAX_VALOR = 1000;
 
+  protected int numElemEsquerda;     // número de elementos no arrayEsquerda
+  protected int numElemDireita;    // número de elementos no arrayDireita
+  protected Object[] arrayEsquerda = new Object[0]; //criação do array da esquerda
+  protected Object[] arrayDireita = new Object[0]; //criação do array da esquerda
+  public static final int MAX_VALOR = 1000;
+  public static final int MAX_VALOR2 = 100;
+
+  //Construtor vazio da classe
   public IndexableList() {
   }
 
+  //Construtor da classe utilizando array list
   public IndexableList(ArrayList<E> listaEsquerda, ArrayList<E> listaDireita) {
-    numElem1 = listaEsquerda.size();
+    numElemEsquerda = listaEsquerda.size();
     numElemDireita = listaDireita.size();
     arrayDireita = new Object[numElemDireita];
-    arrayEsquerda = new Object[numElem1];
+    arrayEsquerda = new Object[numElemEsquerda];
 
-    for (int i = 0; i < numElem1; i++) {
-      arrayEsquerda[i] = listaEsquerda.get(numElem1 -1-i);
+    for (int i = 0; i < numElemEsquerda; i++) {
+      arrayEsquerda[i] = listaEsquerda.get(numElemEsquerda -1-i);
     }
     for (int i = 0; i < numElemDireita; i++) {
       arrayDireita[i] = listaDireita.get(i);
     }
   }
 
+  //Construtor da classe utilizando elementos do tipo array
   public IndexableList(E[] esqArray, E[] dirArray) {
-    numElem1 = esqArray.length; numElemDireita = dirArray.length;
-    arrayDireita = new Object[numElemDireita]; arrayEsquerda = new Object[numElem1];
+    numElemEsquerda = esqArray.length; numElemDireita = dirArray.length;
+    arrayDireita = new Object[numElemDireita]; arrayEsquerda = new Object[numElemEsquerda];
 
-    for (int i = 0; i < numElem1; i++) {
-      arrayEsquerda[i] = esqArray[numElem1 -1-i];
+    for (int i = 0; i < numElemEsquerda; i++) {
+      arrayEsquerda[i] = esqArray[numElemEsquerda -1-i];
     }
     for (int i = 0; i < numElemDireita; i++) {
       arrayDireita[i] = dirArray[i];
@@ -77,17 +81,16 @@ public class IndexableList<E> {
    */
   public void add(int index, E element) {
     if (index < (size() + 1) / 2) {
-      if (arrayEsquerda.length == numElem1) {
-        aumentarEsquerdaArray(1000);
+      if (arrayEsquerda.length == numElemEsquerda) {
+        aumentarEsquerdaArray(MAX_VALOR);
       }
-      numElem1++;
+      numElemEsquerda++;
       for (int i = 0; i < index; i++) {
         set(i, get(i + 1));
       }
-    }
-    else {
+    } else {
       if (arrayDireita.length == numElemDireita) {
-        aumentar(100);
+        aumentar(MAX_VALOR2);
       }
       numElemDireita++;
       for (int i = size()-1; i > index; i--) {
@@ -97,24 +100,40 @@ public class IndexableList<E> {
     set(index, element);
   }
 
+  /* @description: Adiciona posições no array da esquerda
+   * @param: int extensao - quantidade de posições a serem inseridas
+   * @return: nenhum
+   */
   public void aumentarEsquerdaArray(int extensao) {
-            Object[] prevArray = arrayEsquerda;
+    Object[] prevArray = arrayEsquerda;
     arrayEsquerda = new Object[arrayEsquerda.length + extensao];
-                       for (int i = 0; i < numElem1; i++) { arrayEsquerda[i] = prevArray[i];
+
+    for (int i = 0; i < numElemEsquerda; i++) {
+      arrayEsquerda[i] = prevArray[i];
     }
   }
 
-  public void aumentar(int ex) {
+  /* @description: Adiciona posições no array da direita
+   * @param: int extensao - quantidade de posições a serem inseridas
+   * @return: nenhum
+   */
+  public void aumentar(int extensao) {
     Object[] prevArray = arrayDireita;
-    arrayDireita = new Object[prevArray.length + ex];
+    arrayDireita = new Object[prevArray.length + extensao];
+
     for (int i = 0; i < numElemDireita; i++) {
       arrayDireita[i] = prevArray[i];
     }
   }
 
-  public boolean contem (Object o) {
+  /* @description: Verifica se um elemento esta presenta no array da esquerda ou da direira
+   * @param: Object o - Objeto a ser verificado (aceita valores como string, int, etc..)
+   * @return: True -> Caso o elemento seja encontrado em uma das listas
+   * @return: False -> Caso o elemento não seja encontrado em uma das listas
+   */
+  public boolean contem(Object o) {
 
-    for (int i = 0; i < numElem1; i++) {
+    for (int i = 0; i < numElemEsquerda; i++) {
       if (arrayEsquerda[i].equals(o)) {
         return true; //original -> false
       }
@@ -133,10 +152,10 @@ public class IndexableList<E> {
    * @return: elemento, procurado pelo index
    */
   public E get(int index) {
-    if (index < numElem1) {
-      return (E) arrayEsquerda[numElem1 - 1 - index];
+    if (index < numElemEsquerda) {
+      return (E) arrayEsquerda[numElemEsquerda - 1 - index];
     } else {
-      return (E) arrayDireita[index - numElem1]; //original -> index - 1 - numElem1
+      return (E) arrayDireita[index - numElemEsquerda]; //original -> index - 1 - numElemEsquerda
     }
   }
 
@@ -145,14 +164,14 @@ public class IndexableList<E> {
    * @return: a posição do elemento procurado ou -3 caso ele não exista na lista
    */
   public int indexOf(Object o) {
-    for (int i = numElem1 -1; i >= 0; i--) {
+    for (int i = numElemEsquerda -1; i >= 0; i--) {
       if (arrayEsquerda[i].equals(o)) {
-        return numElem1 - i - 1;
+        return numElemEsquerda - i - 1;
       }
     }
     for (int i = 0; i < numElemDireita; i++) {
       if (arrayDireita[i].equals(o)) {
-        return numElem1 + i;
+        return numElemEsquerda + i;
       }
     }
     return -3;
@@ -160,9 +179,10 @@ public class IndexableList<E> {
 
   /* @description: Retorna true se a lista estiver sem nenhum elemento
    * @param: nenhum
-   * @return: true, se a lista estiver vazia
+   * @return: True, se a lista estiver vazia
+   * @return: False, se a lista estiver populada
    */
-  public boolean v() {
+  public boolean verificarListaVazia() {
     return size() == 0;
   }
 
@@ -172,47 +192,43 @@ public class IndexableList<E> {
    */
   public E remover(int index)  {
     E removedItem = get(index);
-    if (index < (size() + 1) / 2 && numElem1 > 0) {
+    if (index < (size() + 1) / 2 && numElemEsquerda > 0) {
       for (int i = index; i > 0; i--) {
         set(i, get(i - 1));
       }
       set(0, null);
-      numElem1--;
+      numElemEsquerda--;
+    } else {
+      int size = size();
+      for (int i = index; i < size-1; i++) {
+        set(i, get(i + 1));
+      }
+      set(size-1, null);
+      numElemDireita--;
     }
-        else {
-            int size = size();
-              for (int i = index; i < size-1; i++) {
-                set(i, get(i + 1));
-        }
-                    set(size-1, null);
-                        numElemDireita--;
-    }
-                            return removedItem;
+    return removedItem;
   }
 
   /* @description: Setar um elemento em uma posição da lista
-   * @param: index e elemento a ser adicionado
+   * @param: index - posição do elemento a ser adicionado
+   * @param: elemento - valor do elemento a ser adicionado
    * @return: e, elemento adicionado
    */
   public E set(int index, E elemento) {
     E e = get(index); // Original -> index -1
-    if (index < numElem1) {
-      arrayEsquerda[numElem1 - 1 - index] = elemento;
-    } else { arrayDireita[index - numElem1] = elemento; }
+    if (index < numElemEsquerda) {
+      arrayEsquerda[numElemEsquerda - 1 - index] = elemento;
+    } else {
+      arrayDireita[index - numElemEsquerda] = elemento;
+    }
     return e;
   }
 
+  /* @description: Retorna a soma da quantidade de elementos da lista da esquerda e da direita
+   * @return: valor da soma dos elementos das listas
+   */
   public int size() {
-    return numElem1 + numElemDireita;
+    return numElemEsquerda + numElemDireita;
   }
 
 }
-
-
-//Esse é um exemplo de criação de uma lista nesse código
-// Uma lista é formada por dois vetores
-// Monte os vetores e depois use-os para criar a lista
-
-//String[] vetorEsquerdo = {"A", "B", "C"};
-//String[] vetorDireito = {"D", "E", "F"};
-//IndexableList<String> testLista = new IndexableList(vetorEsquerdo, vetorDireito);
